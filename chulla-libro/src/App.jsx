@@ -1,35 +1,68 @@
-import { useEffect, useState } from "react";
-import { createClient } from "@supabase/supabase-js";
-
-const supabase = createClient(import.meta.env.VITE_SUPABASE_URL, import.meta.env.VITE_SUPABASE_ANON_KEY);
+import { useEffect, useState } from 'react'
+import {
+  buscarLibrosDisponibles,
+  buscarLibrosPorTitulo,
+  buscarLibrosConAND,
+  buscarLibrosConOR,
+  buscarTodosLosLibros
+} from './backend/libros'
 
 function App() {
-  const [Libros, setLibros] = useState([]);
+  const [disponibles, setDisponibles] = useState([])
+  const [porTitulo, setPorTitulo] = useState([])
+  const [filtradosAND, setFiltradosAND] = useState([])
+  const [filtradosOR, setFiltradosOR] = useState([])
+  const [todos, setTodos] = useState([])
 
   useEffect(() => {
-    getLibros();
-  }, []);
+    async function cargar() {
+      setDisponibles(await buscarLibrosDisponibles())
+      setPorTitulo(await buscarLibrosPorTitulo("aprendiendo"))
+      setFiltradosAND(await buscarLibrosConAND({
+        titulo: 'Buscando a dorothy',
+        autor: 'Juan',
+        categoria: 'Terror'
+      }))
+      setFiltradosOR(await buscarLibrosConOR({
+        titulo: 'supabase',
+        autor: 'juan',
+        categoria: 'programación'
+      }))
+      setTodos(await buscarTodosLosLibros())
+    }
 
-  async function getLibros() {
-    const { data } = await supabase.from("Libros").select();
-    setLibros(data);
+    cargar()
+  }, [])
+
+  function renderLista(titulo, libros) {
+    return (
+      <div>
+        <h2>{titulo}</h2>
+        {libros.length === 0 ? (
+          <p>No hay resultados.</p>
+        ) : (
+          <ul>
+            {libros.map((libro) => (
+              <li key={libro.LibroID}>
+                <p><strong>{libro.Titulo}</strong> — {libro.Autor} ({libro.Categoria})</p>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+    )
   }
 
   return (
     <div>
-      <h1>Libros</h1>
-      <ul>
-        {Libros.map((Libro) => (
-          <li key={Libro.LibroID}>
-            <p>ID: {Libro.LibroID}</p>
-            <p>Título: {Libro.Titulo}</p>
-            <p>Autor: {Libro.Autor}</p>
-            <p>Categoría: {Libro.Categoria}</p>
-          </li>
-        ))}
-      </ul>
+      <h1>Catálogo de Libros</h1>
+      {renderLista("Libros Disponibles", disponibles)}
+      {renderLista("Búsqueda por Título: 'aprendiendo'", porTitulo)}
+      {renderLista("Filtro AND: Título + Autor + Categoría", filtradosAND)}
+      {renderLista("Filtro OR: Título o Autor o Categoría", filtradosOR)}
+      {renderLista("Todos los libros (incluye no disponibles)", todos)}
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
