@@ -1,4 +1,4 @@
-# Logs
+# === Logs ===
 logs
 *.log
 npm-debug.log*
@@ -7,15 +7,35 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-node_modules
+# === Node.js ===
+node_modules/
+
+# === Vite / React (client) ===
+client/dist/
+client/.vite/
+client/*.local
+
+# === Express (server) ===
+server/node_modules/
+server/logs/
+server/*.env
+server/*.local
+server/.cache/
+server/dist/
+server/build/
+
+# === Build output ===
 dist
 dist-ssr
-*.local
 
-# Editor directories and files
+# === Environment files ===
+.env
+*.env.*
+
+# === Editor directories and files ===
 .vscode/*
 !.vscode/extensions.json
-.idea
+.idea/
 .DS_Store
 *.suo
 *.ntvs*
