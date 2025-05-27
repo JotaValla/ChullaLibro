@@ -79,7 +79,7 @@ const Profile = () => {
         <div style={{ textAlign: 'center', marginTop: '20px' }}>
           <p style={{ fontSize: '10px' }}>Última vez que visitaste esta página: Hace 5 minutos</p>
           <p>Contador de visitas: 1337</p>
-          <img src="https://placekitten.com/100/100" alt="Otro gatito" />
+          <img src="https://media.istockphoto.com/id/857090044/es/foto/gatito-naranja-sobre-un-fondo-claro-enfoque-suave.jpg?s=612x612&w=0&k=20&c=o49xmWtg1rjsNjFOepZf4BZimSjvE-QjoWkQic2q9PI=" alt="Otro gatito" />
           <p>🎵 Now playing: Never Gonna Give You Up - Rick Astley 🎵</p>
         </div>
       </div>
