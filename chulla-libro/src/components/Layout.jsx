@@ -5,7 +5,7 @@ const Layout = ({ children }) => {
   const location = useLocation();
   const menuItems = [
     { path: '/', label: 'Inicio', icon: '🏠' },
-    { path: '/books', label: 'Libros', icon: '▲' }, // Falla 2: Triángulo en lugar de icono de libro
+    { path: '/books', label: 'Libros', icon: '📚' },
     { path: '/loans', label: 'Préstamos', icon: '📋' },
     { path: '/profile', label: 'Perfil', icon: '👤' },
     { path: '/help', label: 'Ayuda', icon: '❓' },
