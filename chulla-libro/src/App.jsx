@@ -5,6 +5,7 @@ import Books from './pages/Books';
 import Profile from './pages/Profile';
 import './App.css';
 import Loans from './pages/Loans';
+import Help from './pages/Help';
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
           <Route path="/books" element={<Books />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/loans" element={<Loans />} />
+          <Route path="/help" element={<Help />} />
         </Routes>
       </Layout>
     </Router>

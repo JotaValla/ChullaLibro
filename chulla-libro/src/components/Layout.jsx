@@ -8,6 +8,7 @@ const Layout = ({ children }) => {
     { path: '/books', label: 'Libros', icon: '▲' }, // Falla 2: Triángulo en lugar de icono de libro
     { path: '/loans', label: 'Préstamos', icon: '📋' },
     { path: '/profile', label: 'Perfil', icon: '👤' },
+    { path: '/help', label: 'Ayuda', icon: '❓' },
   ];
 
   return (
