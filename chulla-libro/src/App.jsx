@@ -1,34 +1,25 @@
-import { useEffect, useState } from "react";
-import { createClient } from "@supabase/supabase-js";
-
-const supabase = createClient(import.meta.env.VITE_SUPABASE_URL, import.meta.env.VITE_SUPABASE_ANON_KEY);
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Layout from './components/Layout';
+import Home from './pages/Home';
+import Books from './pages/Books';
+import Profile from './pages/Profile';
+import './App.css';
+import Loans from './pages/Loans';
+import Help from './pages/Help';
 
 function App() {
-  const [Libros, setLibros] = useState([]);
-
-  useEffect(() => {
-    getLibros();
-  }, []);
-
-  async function getLibros() {
-    const { data } = await supabase.from("Libros").select();
-    setLibros(data);
-  }
-
   return (
-    <div>
-      <h1>Libros</h1>
-      <ul>
-        {Libros.map((Libro) => (
-          <li key={Libro.LibroID}>
-            <p>ID: {Libro.LibroID}</p>
-            <p>Título: {Libro.Titulo}</p>
-            <p>Autor: {Libro.Autor}</p>
-            <p>Categoría: {Libro.Categoria}</p>
-          </li>
-        ))}
-      </ul>
-    </div>
+    <Router>
+      <Layout>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/books" element={<Books />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/loans" element={<Loans />} />
+          <Route path="/help" element={<Help />} />
+        </Routes>
+      </Layout>
+    </Router>
   );
 }
 
