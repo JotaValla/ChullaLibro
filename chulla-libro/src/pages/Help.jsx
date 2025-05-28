@@ -213,11 +213,11 @@ const Help = () => {
                 <div className="text-sm text-gray-600">Disponible</div>
               </div>
               <div className="text-center p-3 bg-purple-50 rounded-lg">
-                <div className="text-2xl font-bold text-purple-600">98%</div>
+                <div className="text-2xl font-bold text-purple-600">100%</div>
                 <div className="text-sm text-gray-600">Útil</div>
               </div>
               <div className="text-center p-3 bg-orange-50 rounded-lg">
-                <div className="text-2xl font-bold text-orange-600">&lt;2min</div>
+                <div className="text-2xl font-bold text-orange-600">&lt;5min</div>
                 <div className="text-sm text-gray-600">Respuesta</div>
               </div>
             </div>
@@ -235,11 +235,9 @@ const Help = () => {
                 aria-controls={`section-${section.id}`}
               >
                 <div className="flex items-center gap-3">
-                  <Tooltip content={`Información sobre ${section.title.toLowerCase()}`}>
                     <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center text-blue-600">
                       {section.icon}
                     </div>
-                  </Tooltip>
                   <h2 className="text-xl font-semibold text-gray-900 text-left">{section.title}</h2>
                 </div>
                 <div className="flex items-center gap-2">
@@ -297,22 +295,8 @@ const Help = () => {
           </div>
         </div>
 
-        {/* Footer */}
-        <div className="mt-8 text-center py-6 border-t border-gray-200">
-          <div className="mb-4">
-            <h3 className="text-lg font-bold text-gray-900">ChullaLibro</h3>
-            <p className="text-gray-600">Tu plataforma para compartir y descubrir libros</p>
-          </div>
-          <div className="text-sm text-gray-500 space-x-4">
-            <span>Versión 1.0.0</span>
-            <span>•</span>
-            <span>Última actualización: {new Date().toLocaleDateString('es-ES')}</span>
-          </div>
-        </div>
-
         {/* Botón scroll to top */}
         {showScrollTop && (
-          <Tooltip content="Volver arriba">
             <button
               onClick={scrollToTop}
               className="fixed bottom-6 right-6 w-12 h-12 bg-blue-600 hover:bg-blue-700 text-white rounded-full shadow-lg transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 z-50"
@@ -320,7 +304,6 @@ const Help = () => {
             >
               <ArrowUp className="w-6 h-6 mx-auto" />
             </button>
-          </Tooltip>
         )}
       </div>
     </div>

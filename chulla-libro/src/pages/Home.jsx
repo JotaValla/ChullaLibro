@@ -1,27 +1,31 @@
 import { Book, Users, Share2, Search, ArrowRight, Star, BookOpen, Heart } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const Home = () => {
   return (
     <div className="bg-gray-50">
       {/* Hero Section */}
-      <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white">
+      <div className="text-gray-900">
         <div className="px-6 lg:px-8 py-12 lg:py-16">
           <div className="text-center">
-            <div className="w-20 h-20 bg-white/10 rounded-full flex items-center justify-center mx-auto mb-6">
-              <Book className="w-10 h-10 text-white" />
+            <div className="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
+              <Book className="w-10 h-10 text-blue-600" />
             </div>
             <h1 className="text-3xl lg:text-5xl font-bold mb-6">
-              Bienvenido a <span className="text-yellow-300">ChullaLibro</span>
+              Bienvenido a <span className="text-blue-600">ChullaLibro</span>
             </h1>
-            <p className="text-lg lg:text-xl mb-8 opacity-90">
+            <p className="text-lg lg:text-xl mb-8 text-gray-600">
               Tu plataforma para compartir y descubrir libros. Únete a una comunidad apasionada por la lectura.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <button className="px-8 py-4 bg-white text-blue-600 font-semibold rounded-lg hover:bg-gray-100 transition-colors duration-200 flex items-center gap-2 justify-center">
+              <Link
+                to="/books"
+                className="px-8 py-4 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors duration-200 flex items-center gap-2 justify-center"
+              >
                 <Search className="w-5 h-5" />
                 Explorar Libros
-              </button>
-              <button className="px-8 py-4 bg-transparent border-2 border-white text-white font-semibold rounded-lg hover:bg-white hover:text-blue-600 transition-all duration-200 flex items-center gap-2 justify-center">
+              </Link>
+              <button className="px-8 py-4 bg-transparent border-2 border-blue-600 text-blue-600 font-semibold rounded-lg hover:bg-blue-600 hover:text-white transition-all duration-200 flex items-center gap-2 justify-center">
                 <Users className="w-5 h-5" />
                 Unirse a la Comunidad
               </button>
@@ -121,7 +125,7 @@ const Home = () => {
               <div className="text-3xl font-bold text-gray-900 mb-2">1,500+</div>
               <div className="text-sm text-gray-600">Libros Disponibles</div>
             </div>
-            
+
             <div className="text-center">
               <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Users className="w-8 h-8 text-green-600" />
@@ -129,7 +133,7 @@ const Home = () => {
               <div className="text-3xl font-bold text-gray-900 mb-2">500+</div>
               <div className="text-sm text-gray-600">Usuarios Activos</div>
             </div>
-            
+
             <div className="text-center">
               <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Heart className="w-8 h-8 text-purple-600" />
@@ -137,7 +141,7 @@ const Home = () => {
               <div className="text-3xl font-bold text-gray-900 mb-2">2,300+</div>
               <div className="text-sm text-gray-600">Libros Compartidos</div>
             </div>
-            
+
             <div className="text-center">
               <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Star className="w-8 h-8 text-orange-600" />
