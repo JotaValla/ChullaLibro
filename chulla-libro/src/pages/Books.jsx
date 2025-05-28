@@ -11,60 +11,95 @@ const Books = () => {
     categoria: ''
   });
   const [error, setError] = useState('');
-
-  // Falla 1: Sin indicadores de carga ni confirmación de éxito
-  // Falla 5: Permite búsquedas vacías que generan error
-  // Falla 8: Errores 500 sin detalles
+  const [loading, setLoading] = useState(false);
   const handleSearch = async () => {
+    if (!searchTerm.trim()) {
+      setError('Por favor ingrese un término de búsqueda');
+      return;
+    }
+    
+    setLoading(true);
+    setError('');
     try {
-      let results;
-      // Permite búsquedas vacías intencionalmente
-      if (!searchTerm.trim()) {
-        throw new Error('Internal Server Error');
-      }
-      results = await buscarLibrosPorTitulo(searchTerm);
+      const results = await buscarLibrosPorTitulo(searchTerm);
       setBooks(results);
-      setError('');
     } catch (err) {
-      // Muestra error 500 genérico sin detalles
-      setError('Error 500: Internal Server Error');
+      setError('Error al buscar libros. Por favor intente nuevamente.');
       setBooks([]);
+    } finally {
+      setLoading(false);
     }
   };
-
-  // Falla 4: Botón dice "Ejecutar" en lugar de "Confirmar"
-  // Falla 5: Permite búsquedas vacías en formulario avanzado
   const handleAdvancedSearch = async () => {
+    const { titulo, autor, categoria } = advancedFilters;
+    if (!titulo.trim() && !autor.trim() && !categoria.trim()) {
+      setError('Por favor complete al menos un campo');
+      return;
+    }
+    
+    setLoading(true);
+    setError('');
     try {
-      const { titulo, autor, categoria } = advancedFilters;
-      // Permite búsquedas completamente vacías
-      if (!titulo.trim() && !autor.trim() && !categoria.trim()) {
-        throw new Error('Internal Server Error');
-      }
       const results = await buscarLibrosConAND(advancedFilters);
       setBooks(results);
-      setError('');
       setShowAdvanced(false);
     } catch (err) {
-      // Error 500 genérico
-      setError('Error 500: Internal Server Error');
+      setError('Error al buscar libros. Por favor intente nuevamente.');
       setBooks([]);
+    } finally {
+      setLoading(false);
     }
   };
-
   const loadAllBooks = async () => {
+    setLoading(true);
+    setError('');
     try {
       const results = await buscarTodosLosLibros();
       setBooks(results);
-      setError('');
     } catch (err) {
-      setError('Error 500: Internal Server Error');
+      setError('Error al cargar libros. Por favor intente nuevamente.');
       setBooks([]);
+    } finally {
+      setLoading(false);
     }
   };
-
   return (
-    <div className="books">
+    <div className="books" style={{ position: 'relative' }}>
+      {loading && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          backgroundColor: 'rgba(0, 0, 0, 0.5)',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          zIndex: 1000
+        }}>
+          <div style={{
+            backgroundColor: 'white',
+            padding: '20px 40px',
+            borderRadius: '8px',
+            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '15px'
+          }}>
+            <div style={{
+              width: '20px',
+              height: '20px',
+              border: '3px solid #f3f3f3',
+              borderTop: '3px solid #3498db',
+              borderRadius: '50%',
+              animation: 'spin 1s linear infinite'
+            }}></div>
+            <span style={{ fontSize: '16px', fontWeight: '500' }}>Cargando...</span>
+          </div>
+        </div>
+      )}
+      
       <h1>Catálogo de Libros</h1>
       
       {/* Búsqueda simple */}
@@ -75,19 +110,12 @@ const Books = () => {
           className="search-input"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-        />
-        {/* Falla 2: Icono triangular en lugar de lupa */}
-        <button className="search-button" onClick={handleSearch}>
-          <span className="triangle-icon">▲</span> Buscar
+        />        <button className="search-button" onClick={handleSearch} disabled={loading}>
+          <span className="search-icon">🔍</span> Buscar
+        </button><button onClick={() => setShowAdvanced(true)} disabled={loading}>Búsqueda Avanzada</button>        <button onClick={loadAllBooks} disabled={loading}>
+          Ver Todos
         </button>
-        <button onClick={() => setShowAdvanced(true)}>Búsqueda Avanzada</button>
-        <button onClick={loadAllBooks}>Ver Todos</button>
-      </div>
-
-      {/* Falla 3: Formulario sin botón Cancelar */}
-      {/* Falla 6: Filtros no visibles (campos ocultos) */}
-      {/* Falla 7: Sin atajos para usuarios avanzados */}
-      {showAdvanced && (
+      </div>      {showAdvanced && (
         <div className="advanced-search">
           <h3>Búsqueda Avanzada</h3>
           <div className="advanced-form">
@@ -97,30 +125,26 @@ const Books = () => {
               value={advancedFilters.titulo}
               onChange={(e) => setAdvancedFilters({...advancedFilters, titulo: e.target.value})}
             />
-            {/* Filtros ocultos por defecto - Falla 6 */}
-            <div style={{display: 'none'}}>
-              <input
-                type="text"
-                placeholder="Autor"
-                value={advancedFilters.autor}
-                onChange={(e) => setAdvancedFilters({...advancedFilters, autor: e.target.value})}
-              />
-              <input
-                type="text"
-                placeholder="Categoría"
-                value={advancedFilters.categoria}
-                onChange={(e) => setAdvancedFilters({...advancedFilters, categoria: e.target.value})}
-              />
-            </div>
-            {/* Falla 4: Botón dice "Ejecutar" */}
-            <button onClick={handleAdvancedSearch}>Ejecutar</button>
-            {/* Falla 3: Sin botón Cancelar */}
+            <input
+              type="text"
+              placeholder="Autor"
+              value={advancedFilters.autor}
+              onChange={(e) => setAdvancedFilters({...advancedFilters, autor: e.target.value})}
+            />
+            <input
+              type="text"
+              placeholder="Categoría"
+              value={advancedFilters.categoria}
+              onChange={(e) => setAdvancedFilters({...advancedFilters, categoria: e.target.value})}
+            />            <button onClick={handleAdvancedSearch} disabled={loading}>
+              Confirmar
+            </button>
+            <button onClick={() => setShowAdvanced(false)} disabled={loading}>
+              Cancelar
+            </button>
           </div>
         </div>
-      )}
-
-      {/* Mostrar errores */}
-      {error && <div className="error-message" style={{color: 'red', margin: '10px 0'}}>{error}</div>}
+      )}      {error && <div className="error-message" style={{color: 'red', margin: '10px 0'}}>{error}</div>}
 
       {/* Lista de libros */}
       <div className="books-grid">
@@ -134,9 +158,15 @@ const Books = () => {
             </div>
           ))
         ) : (
-          <p>No se encontraron libros.</p>
-        )}
+          <p>No se encontraron libros.</p>        )}
       </div>
+      
+      <style>{`
+        @keyframes spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+      `}</style>
     </div>
   );
 };
