@@ -3,7 +3,7 @@ import Layout from './components/Layout';
 import Home from './pages/Home';
 import Books from './pages/Books';
 import Profile from './pages/Profile';
-import './App.css';
+import './main.css';
 import Loans from './pages/Loans';
 import Help from './pages/Help';
 
