@@ -9,7 +9,7 @@ import { supabase } from './client'
  *  @returns {Array<Object>} Lista de libros disponibles
  */
 export async function buscarLibrosDisponibles() {
-    const { data, error } = await supabase.from('Libros').select('*').eq('Disponible', true)
+    const { data, error } = await supabase.from('Libros').select('*')
     if (error) throw error
     return data
 }
@@ -37,7 +37,7 @@ export async function buscarTodosLosLibros() {
  *  @returns {Array<Object>} Lista de libros coincidentes
  */
 export async function buscarLibrosPorTitulo(titulo) {
-    const { data, error } = await supabase.from('Libros').select('*').ilike('Titulo', `%${titulo}%`).eq('Disponible', true)
+    const { data, error } = await supabase.from('Libros').select('*').ilike('Titulo', `%${titulo}%`)
     if (error) throw error
     return data
 }
