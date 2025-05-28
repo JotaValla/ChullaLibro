@@ -1,14 +1,21 @@
 import { Link, useLocation } from 'react-router-dom';
+import {
+  Home,
+  Search,
+  ClipboardList,
+  User,
+  HelpCircle
+} from 'lucide-react';
 import './Layout.css';
 
 const Layout = ({ children }) => {
   const location = useLocation();
   const menuItems = [
-    { path: '/', label: 'Inicio', icon: '🏠' },
-    { path: '/books', label: 'Libros', icon: '▲' }, // Falla 2: Triángulo en lugar de icono de libro
-    { path: '/loans', label: 'Préstamos', icon: '📋' },
-    { path: '/profile', label: 'Perfil', icon: '👤' },
-    { path: '/help', label: 'Ayuda', icon: '❓' },
+    { path: '/', label: 'Inicio', icon: <Home size={20} /> },
+    { path: '/books', label: 'Libros', icon: <Search size={20} /> },
+    { path: '/loans', label: 'Préstamos', icon: <ClipboardList size={20} /> },
+    { path: '/profile', label: 'Perfil', icon: <User size={20} /> },
+    { path: '/help', label: 'Ayuda', icon: <HelpCircle size={20} /> },
   ];
 
   return (
