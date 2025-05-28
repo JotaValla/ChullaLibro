@@ -214,11 +214,6 @@ const Loans = () => {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header with breadcrumb */}
         <div className="mb-8">
-          <nav className="text-sm breadcrumbs mb-4">
-            <span className="text-gray-500">Inicio</span>
-            <span className="mx-2 text-gray-400">/</span>
-            <span className="text-blue-600 font-medium">Mis Préstamos</span>
-          </nav>
           
           <div className="bg-white rounded-lg shadow-sm border p-6">
             <div className="flex items-center gap-3 mb-4">
