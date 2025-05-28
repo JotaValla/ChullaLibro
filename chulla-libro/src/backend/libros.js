@@ -56,7 +56,7 @@ export async function buscarLibrosPorTitulo(titulo) {
  *  @returns {Array<Object>} Lista de libros coincidentes con todos los filtros
  */
 export async function buscarLibrosConAND({ titulo, autor, categoria }) {
-    let query = supabase.from('Libros').select('*').eq('Disponible', true)
+    let query = supabase.from('Libros').select('*')
 
     if (titulo) query = query.ilike('Titulo', `%${titulo}%`)
     if (autor) query = query.ilike('Autor', `%${autor}%`)
@@ -81,7 +81,7 @@ export async function buscarLibrosConAND({ titulo, autor, categoria }) {
  *  @returns {Array<Object>} Lista de libros que cumplen con al menos un filtro
  */
 export async function buscarLibrosConOR({ titulo, autor, categoria }) {
-    let query = supabase.from('Libros').select('*').eq('Disponible', true)
+    let query = supabase.from('Libros').select('*')
 
     const condiciones = []
     if (titulo) condiciones.push(`Titulo.ilike.%${titulo}%`)
