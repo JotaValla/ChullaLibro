@@ -1,1 +1,114 @@
 @import "tailwindcss";
+
+/* Variables de colores personalizados */
+:root {
+  --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  --success-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  --warning-gradient: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+  --purple-gradient: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+  --orange-gradient: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+  --green-gradient: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+  --pink-gradient: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+  
+  /* Sombras personalizadas */
+  --shadow-colorful: 0 10px 25px -5px rgba(102, 126, 234, 0.25);
+  --shadow-pink: 0 10px 25px -5px rgba(245, 87, 108, 0.25);
+  --shadow-cyan: 0 10px 25px -5px rgba(79, 172, 254, 0.25);
+  --shadow-purple: 0 10px 25px -5px rgba(118, 75, 162, 0.25);
+}
+
+/* Clases utilitarias personalizadas */
+.bg-primary-gradient {
+  background: var(--primary-gradient);
+}
+
+.bg-secondary-gradient {
+  background: var(--secondary-gradient);
+}
+
+.bg-success-gradient {
+  background: var(--success-gradient);
+}
+
+.bg-warning-gradient {
+  background: var(--warning-gradient);
+}
+
+.bg-purple-gradient {
+  background: var(--purple-gradient);
+}
+
+.bg-orange-gradient {
+  background: var(--orange-gradient);
+}
+
+.shadow-colorful {
+  box-shadow: var(--shadow-colorful);
+}
+
+.shadow-pink {
+  box-shadow: var(--shadow-pink);
+}
+
+.shadow-cyan {
+  box-shadow: var(--shadow-cyan);
+}
+
+.shadow-purple {
+  box-shadow: var(--shadow-purple);
+}
+
+/* Animaciones personalizadas */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes pulse-color {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-pulse-color {
+  animation: pulse-color 2s ease-in-out infinite;
+}
+
+/* Efectos hover personalizados */
+.hover-lift {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hover-lift:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.15);
+}
+
+/* Estilos globales mejorados */
+body {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+}
+
+/* Scrollbar personalizada */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
+}

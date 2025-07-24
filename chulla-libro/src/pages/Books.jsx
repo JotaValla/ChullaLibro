@@ -110,15 +110,15 @@ const Books = () => {
 
   // Lógica para filtros post-búsqueda
   const availableCategories = useMemo(() => {
-    const categories = new Set(books.map(book => book.Categoria));
+    const categories = new Set(books.map(book => book.categoria));
     return Array.from(categories).sort();
   }, [books]);
 
   const filteredBooks = useMemo(() => {
     return books.filter(book => {
-      const categoryMatch = filterCategory ? book.Categoria === filterCategory : true;
+      const categoryMatch = filterCategory ? book.categoria === filterCategory : true;
       const availabilityMatch = filterAvailability
-        ? (filterAvailability === 'available' ? book.Disponible : !book.Disponible)
+        ? (filterAvailability === 'available' ? book.disponible : !book.disponible)
         : true;
       return categoryMatch && availabilityMatch;
     });
@@ -126,34 +126,41 @@ const Books = () => {
 
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen py-8 relative overflow-hidden">
+      {/* Fondo decorativo */}
+      <div className="absolute inset-0 bg-gradient-to-br from-indigo-50 via-white to-purple-50"></div>
+      <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-pink-400/10 to-purple-600/10 rounded-full blur-3xl transform translate-x-32 -translate-y-32"></div>
+      <div className="absolute bottom-0 left-0 w-80 h-80 bg-gradient-to-tr from-blue-400/10 to-cyan-600/10 rounded-full blur-3xl transform -translate-x-20 translate-y-20"></div>
+      
+      <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-8">
-          <div className="bg-white rounded-lg shadow-sm border p-6">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center">
-                <BookOpen className="w-6 h-6 text-white" />
+          <div className="bg-white/80 backdrop-blur-sm rounded-3xl shadow-xl border border-white/50 p-8 hover-lift">
+            <div className="flex items-center gap-4 mb-6">
+              <div className="w-16 h-16 bg-gradient-to-br from-purple-500 via-pink-500 to-blue-500 rounded-2xl flex items-center justify-center shadow-lg animate-pulse-color">
+                <BookOpen className="w-8 h-8 text-white" />
               </div>
               <div>
-                <h1 className="text-3xl font-bold text-gray-900">Catálogo de Libros</h1>
-                <p className="text-gray-600">Busca y explora nuestra colección de libros disponibles</p>
+                <h1 className="text-4xl font-bold bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 bg-clip-text text-transparent">
+                  Catálogo de Libros
+                </h1>
+                <p className="text-lg text-gray-600 font-medium">Busca y explora nuestra colección de libros disponibles</p>
               </div>
             </div>
           </div>
         </div>
 
         {/* Search Section */}
-        <div className="bg-white rounded-lg shadow-sm border p-6 mb-6">
-          <div className="space-y-4">
+        <div className="bg-white/80 backdrop-blur-sm rounded-3xl shadow-xl border border-white/50 p-8 mb-8 hover-lift">
+          <div className="space-y-6">
             {/* Simple Search */}
-            <div className="flex flex-col sm:flex-row gap-3">
+            <div className="flex flex-col sm:flex-row gap-4">
               <div className="flex-1 relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-purple-400 w-6 h-6" />
                 <input
                   type="text"
                   placeholder="Buscar por palabra clave en título..."
-                  className="w-full pl-10 pr-10 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                  className="w-full pl-12 pr-12 py-4 border-2 border-purple-200 rounded-2xl focus:ring-4 focus:ring-purple-500/20 focus:border-purple-500 transition-all duration-300 text-gray-800 font-medium bg-white/50 backdrop-blur-sm"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   onKeyPress={handleKeyPress}
@@ -162,38 +169,38 @@ const Books = () => {
                 {searchTerm && (
                   <button
                     onClick={clearSearch}
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                    className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-red-500 transition-colors duration-200"
                     title="Limpiar búsqueda"
                   >
-                    <X className="w-5 h-5" />
+                    <X className="w-6 h-6" />
                   </button>
                 )}
               </div>
 
-              <div className="flex gap-2 flex-wrap">
+              <div className="flex gap-3 flex-wrap">
                 <button
                   onClick={handleSearch}
                   disabled={isLoading || !searchTerm.trim()}
-                  className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
+                  className="group px-8 py-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-2xl hover:from-purple-700 hover:to-pink-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-all duration-300 flex items-center gap-3 shadow-lg hover:shadow-xl transform hover:scale-105 font-bold"
                 >
-                  <Search className="w-5 h-5" />
+                  <Search className="w-6 h-6 group-hover:rotate-12 transition-transform duration-300" />
                   {isLoading && searchTerm ? 'Buscando...' : 'Buscar'}
                 </button>
                 <button
                   onClick={() => setShowAdvanced(!showAdvanced)}
-                  className="px-4 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors flex items-center gap-2"
+                  className="group px-6 py-4 bg-white/80 backdrop-blur-sm border-2 border-blue-300 text-blue-700 rounded-2xl hover:bg-gradient-to-r hover:from-blue-500 hover:to-cyan-500 hover:text-white hover:border-transparent transition-all duration-300 flex items-center gap-3 shadow-lg hover:shadow-xl transform hover:scale-105 font-bold"
                   title="Búsqueda avanzada"
                 >
-                  <SlidersHorizontal className="w-5 h-5" /> {/* Icono cambiado */}
+                  <SlidersHorizontal className="w-5 h-5 group-hover:scale-110 transition-transform duration-300" />
                   Avanzada
-                  {showAdvanced ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                  {showAdvanced ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
                 </button>
                 <button
                   onClick={loadAllBooks}
                   disabled={isLoading}
-                  className="px-4 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
+                  className="group px-6 py-4 bg-white/80 backdrop-blur-sm border-2 border-green-300 text-green-700 rounded-2xl hover:bg-gradient-to-r hover:from-green-500 hover:to-emerald-500 hover:text-white hover:border-transparent disabled:bg-gray-300 disabled:cursor-not-allowed transition-all duration-300 flex items-center gap-3 shadow-lg hover:shadow-xl transform hover:scale-105 font-bold"
                 >
-                  <Eye className="w-5 h-5" />
+                  <Eye className="w-5 h-5 group-hover:scale-110 transition-transform duration-300" />
                   Ver Todos
                 </button>
               </div>
@@ -432,58 +439,41 @@ const Books = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {filteredBooks.map((book) => ( // Usar filteredBooks aquí
                     <div key={book.id} className="bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-lg transition-shadow duration-200 overflow-hidden flex flex-col">
-                      {/* REQUERIMIENTO 5: Vista Previa (Espacio para Portada)
-                        Aquí iría la imagen de portada si la tuvieras.
-                        Ejemplo:
-                        {book.portadaUrl && (
-                          <img src={book.portadaUrl} alt={`Portada de ${book.Titulo}`} className="w-full h-48 object-cover"/>
-                        )}
-                        Si no hay portadaUrl, podrías mostrar un placeholder:
-                        <div className="w-full h-48 bg-gray-200 flex items-center justify-center">
-                          <Book className="w-16 h-16 text-gray-400" />
-                        </div>
-                      */}
+                      {/* Imagen de portada o placeholder */}
                        <div className="w-full h-48 bg-gray-100 flex items-center justify-center border-b">
-                         {/* Placeholder si no hay imagen de portada */}
-                         <Book className="w-16 h-16 text-gray-300" />
+                         {book.imagen_portada ? (
+                           <img src={book.imagen_portada} alt={`Portada de ${book.titulo}`} className="w-full h-48 object-cover"/>
+                         ) : (
+                           <img src="/book.png" alt={`Portada de ${book.titulo}`} className="w-full h-48 object-cover"/>
+                         )}
                        </div>
 
                       <div className="p-6 flex flex-col flex-grow">
                         <div className="flex items-start justify-between mb-3">
-                           {/* Icono de libro movido o eliminado si la portada está presente */}
                           <h3 className="text-lg font-semibold text-gray-900 mb-1 line-clamp-2 leading-tight">
-                            {book.Titulo}
+                            {book.titulo || 'Título no disponible'}
                           </h3>
-                          <div className={`px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap ${book.Disponible
+                          <div className={`px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap ${book.disponible
                               ? 'bg-green-100 text-green-800'
                               : 'bg-red-100 text-red-800'
                             }`}>
-                            {book.Disponible ? 'Disponible' : 'No Disponible'}
+                            {book.disponible ? 'Disponible' : 'No Disponible'}
                           </div>
                         </div>
                         
                         <div className="space-y-1 text-sm text-gray-600 mb-4">
                           <div className="flex items-center gap-2">
                             <User size={14} className="text-gray-500" />
-                            <span>{book.Autor}</span>
+                            <span>{book.autor || 'Autor no disponible'}</span>
                           </div>
                           <div className="flex items-center gap-2">
                             <Tag size={14} className="text-gray-500" />
-                            <span>{book.Categoria}</span>
+                            <span>{book.categoria || book.categorias?.nombre || 'Categoría no disponible'}</span>
                           </div>
                         </div>
 
-                        {/* REQUERIMIENTO 5: Vista Previa (Espacio para Resumen)
-                          Aquí iría el resumen del libro si lo tuvieras.
-                          Ejemplo:
-                          {book.resumen && (
-                            <p className="text-sm text-gray-500 line-clamp-3 mb-4 flex-grow">
-                              {book.resumen}
-                            </p>
-                          )}
-                        */}
                         <p className="text-sm text-gray-500 line-clamp-3 mb-4 flex-grow">
-                          Este es un espacio para un breve resumen o descripción del libro. Ayuda al usuario a decidir si el libro es relevante.
+                          {book.descripcion || 'Este es un espacio para un breve resumen o descripción del libro. Ayuda al usuario a decidir si el libro es relevante.'}
                         </p>
 
                         <div className="mt-auto pt-4 border-t border-gray-100">

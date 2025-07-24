@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Search, Book, BookOpen, HelpCircle, ArrowUp, ChevronDown, ChevronRight, Info, Phone, Mail } from 'lucide-react';
+import { Search, Book, BookOpen, HelpCircle, ArrowUp, ChevronDown, ChevronRight, Info, Phone, Mail, Sparkles, Zap, Heart, Star } from 'lucide-react';
 
 const Help = () => {
   const [expandedSections, setExpandedSections] = useState({});
@@ -181,39 +181,63 @@ const Help = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen py-8 relative overflow-hidden">
+      {/* Fondo decorativo */}
+      <div className="absolute inset-0 bg-gradient-to-br from-indigo-50 via-white to-purple-50"></div>
+      <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-yellow-400/10 to-amber-600/10 rounded-full blur-3xl transform translate-x-32 -translate-y-32"></div>
+      <div className="absolute bottom-0 left-0 w-80 h-80 bg-gradient-to-tr from-orange-400/10 to-red-600/10 rounded-full blur-3xl transform -translate-x-20 translate-y-20"></div>
+      
+      <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header con breadcrumb */}
         <div className="mb-8">
-          
-          <div className="bg-white rounded-lg shadow-sm border p-6">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center">
-                <HelpCircle className="w-6 h-6 text-white" />
+          <div className="bg-white/80 backdrop-blur-sm rounded-3xl shadow-xl border border-white/50 p-8 hover-lift">
+            <div className="flex items-center gap-4 mb-6">
+              <div className="w-16 h-16 bg-gradient-to-br from-orange-500 via-amber-500 to-yellow-500 rounded-2xl flex items-center justify-center shadow-lg animate-pulse-color">
+                <HelpCircle className="w-8 h-8 text-white" />
               </div>
               <div>
-                <h1 className="text-3xl font-bold text-gray-900">Centro de Ayuda</h1>
-                <p className="text-gray-600">Encuentra respuestas rápidas a tus preguntas sobre ChullaLibro</p>
+                <h1 className="text-4xl font-bold bg-gradient-to-r from-orange-600 via-amber-600 to-yellow-600 bg-clip-text text-transparent">
+                  Centro de Ayuda
+                </h1>
+                <p className="text-lg text-gray-600 font-medium">Encuentra respuestas rápidas a tus preguntas sobre ChullaLibro</p>
+                
+                {/* Status indicator */}
+                <div className="flex items-center gap-2 mt-3">
+                  <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                  <span className="text-sm font-semibold text-green-600">Soporte en línea disponible</span>
+                </div>
               </div>
             </div>
             
             {/* Estadísticas de ayuda */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
-              <div className="text-center p-3 bg-blue-50 rounded-lg">
-                <div className="text-2xl font-bold text-blue-600">5</div>
-                <div className="text-sm text-gray-600">Secciones</div>
+              <div className="group text-center p-4 bg-gradient-to-br from-blue-50 to-cyan-50 rounded-2xl border border-blue-200/50 hover:shadow-lg transition-all duration-300 hover-lift">
+                <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-xl flex items-center justify-center mx-auto mb-2 group-hover:scale-110 transition-transform duration-300">
+                  <Book className="w-4 h-4 text-white" />
+                </div>
+                <div className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">5</div>
+                <div className="text-sm font-medium text-gray-600">Secciones</div>
               </div>
-              <div className="text-center p-3 bg-green-50 rounded-lg">
-                <div className="text-2xl font-bold text-green-600">24/7</div>
-                <div className="text-sm text-gray-600">Disponible</div>
+              <div className="group text-center p-4 bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl border border-green-200/50 hover:shadow-lg transition-all duration-300 hover-lift">
+                <div className="w-8 h-8 bg-gradient-to-br from-green-500 to-emerald-500 rounded-xl flex items-center justify-center mx-auto mb-2 group-hover:scale-110 transition-transform duration-300">
+                  <Zap className="w-4 h-4 text-white" />
+                </div>
+                <div className="text-2xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">24/7</div>
+                <div className="text-sm font-medium text-gray-600">Disponible</div>
               </div>
-              <div className="text-center p-3 bg-purple-50 rounded-lg">
-                <div className="text-2xl font-bold text-purple-600">100%</div>
-                <div className="text-sm text-gray-600">Útil</div>
+              <div className="group text-center p-4 bg-gradient-to-br from-purple-50 to-pink-50 rounded-2xl border border-purple-200/50 hover:shadow-lg transition-all duration-300 hover-lift">
+                <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center mx-auto mb-2 group-hover:scale-110 transition-transform duration-300">
+                  <Heart className="w-4 h-4 text-white" />
+                </div>
+                <div className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">100%</div>
+                <div className="text-sm font-medium text-gray-600">Útil</div>
               </div>
-              <div className="text-center p-3 bg-orange-50 rounded-lg">
-                <div className="text-2xl font-bold text-orange-600">&lt;5min</div>
-                <div className="text-sm text-gray-600">Respuesta</div>
+              <div className="group text-center p-4 bg-gradient-to-br from-orange-50 to-amber-50 rounded-2xl border border-orange-200/50 hover:shadow-lg transition-all duration-300 hover-lift">
+                <div className="w-8 h-8 bg-gradient-to-br from-orange-500 to-amber-500 rounded-xl flex items-center justify-center mx-auto mb-2 group-hover:scale-110 transition-transform duration-300">
+                  <Star className="w-4 h-4 text-white" />
+                </div>
+                <div className="text-2xl font-bold bg-gradient-to-r from-orange-600 to-amber-600 bg-clip-text text-transparent">&lt;5min</div>
+                <div className="text-sm font-medium text-gray-600">Respuesta</div>
               </div>
             </div>
           </div>

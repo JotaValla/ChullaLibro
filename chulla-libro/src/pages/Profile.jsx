@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { User, Mail, Phone, MapPin, Calendar, Edit3, Save, X, AlertCircle, Check, Eye, EyeOff } from 'lucide-react';
+import { User, Mail, Phone, MapPin, Calendar, Edit3, Save, X, AlertCircle, Check, Eye, EyeOff, Star, Shield, Award } from 'lucide-react';
 
 const Profile = () => {
   const [isEditing, setIsEditing] = useState(false);
@@ -99,29 +99,47 @@ const Profile = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen py-8 relative overflow-hidden">
+      {/* Fondo decorativo */}
+      <div className="absolute inset-0 bg-gradient-to-br from-indigo-50 via-white to-purple-50"></div>
+      <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-pink-400/10 to-purple-600/10 rounded-full blur-3xl transform translate-x-32 -translate-y-32"></div>
+      <div className="absolute bottom-0 left-0 w-80 h-80 bg-gradient-to-tr from-blue-400/10 to-cyan-600/10 rounded-full blur-3xl transform -translate-x-20 translate-y-20"></div>
+      
+      <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header with breadcrumb */}
         <div className="mb-8">
-          
-          <div className="bg-white rounded-lg shadow-sm border p-6">
+          <div className="bg-white/80 backdrop-blur-sm rounded-3xl shadow-xl border border-white/50 p-8 hover-lift">
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center">
-                  <User className="w-6 h-6 text-white" />
+              <div className="flex items-center gap-4">
+                <div className="w-16 h-16 bg-gradient-to-br from-green-500 via-emerald-500 to-cyan-500 rounded-2xl flex items-center justify-center shadow-lg animate-pulse-color">
+                  <User className="w-8 h-8 text-white" />
                 </div>
                 <div>
-                  <h1 className="text-3xl font-bold text-gray-900">Mi Perfil</h1>
-                  <p className="text-gray-600">Información personal y configuración de cuenta</p>
+                  <h1 className="text-4xl font-bold bg-gradient-to-r from-green-600 via-emerald-600 to-cyan-600 bg-clip-text text-transparent">
+                    Mi Perfil
+                  </h1>
+                  <p className="text-lg text-gray-600 font-medium">Información personal y configuración de cuenta</p>
+                  
+                  {/* Stats badges */}
+                  <div className="flex gap-2 mt-3">
+                    <div className="flex items-center gap-1 px-3 py-1 bg-gradient-to-r from-yellow-100 to-orange-100 rounded-full text-xs font-semibold text-orange-700">
+                      <Star className="w-3 h-3" />
+                      Usuario Activo
+                    </div>
+                    <div className="flex items-center gap-1 px-3 py-1 bg-gradient-to-r from-green-100 to-emerald-100 rounded-full text-xs font-semibold text-green-700">
+                      <Shield className="w-3 h-3" />
+                      Verificado
+                    </div>
+                  </div>
                 </div>
               </div>
               
               {!isEditing && (
                 <button
                   onClick={handleEdit}
-                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2"
+                  className="group px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-2xl hover:from-blue-700 hover:to-purple-700 transition-all duration-300 flex items-center gap-3 shadow-lg hover:shadow-xl transform hover:scale-105 font-bold"
                 >
-                  <Edit3 className="w-4 h-4" />
+                  <Edit3 className="w-5 h-5 group-hover:rotate-12 transition-transform duration-300" />
                   Editar
                 </button>
               )}
@@ -131,72 +149,85 @@ const Profile = () => {
 
         {/* Status Messages */}
         {error && (
-          <div className="bg-red-50 border-l-4 border-red-400 p-4 mb-6 rounded-lg">
+          <div className="bg-gradient-to-r from-red-50 to-pink-50 border-l-4 border-red-400 p-6 mb-6 rounded-2xl shadow-lg">
             <div className="flex items-center">
-              <AlertCircle className="w-5 h-5 text-red-400 mr-2" />
-              <p className="text-red-700">{error}</p>
+              <div className="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center mr-3">
+                <AlertCircle className="w-5 h-5 text-red-500" />
+              </div>
+              <p className="text-red-700 font-medium">{error}</p>
             </div>
           </div>
         )}
 
         {success && (
-          <div className="bg-green-50 border-l-4 border-green-400 p-4 mb-6 rounded-lg">
+          <div className="bg-gradient-to-r from-green-50 to-emerald-50 border-l-4 border-green-400 p-6 mb-6 rounded-2xl shadow-lg">
             <div className="flex items-center">
-              <Check className="w-5 h-5 text-green-400 mr-2" />
-              <p className="text-green-700">{success}</p>
+              <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center mr-3 animate-pulse">
+                <Check className="w-5 h-5 text-green-500" />
+              </div>
+              <p className="text-green-700 font-medium">{success}</p>
             </div>
           </div>
         )}
 
         {/* Profile Information */}
-        <div className="bg-white rounded-lg shadow-sm border">
-          <div className="p-6 border-b border-gray-200">
-            <h2 className="text-xl font-semibold text-gray-900">Información Personal</h2>
-            <p className="text-sm text-gray-600 mt-1">
-              {isEditing ? 'Modifica la información de tu perfil' : 'Detalles de tu cuenta'}
-            </p>
+        <div className="bg-white/80 backdrop-blur-sm rounded-3xl shadow-xl border border-white/50 overflow-hidden hover-lift">
+          <div className="p-8 border-b border-gradient-to-r from-purple-200/50 to-pink-200/50">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center">
+                <Award className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <h2 className="text-2xl font-bold text-gray-900">Información Personal</h2>
+                <p className="text-gray-600 font-medium">
+                  {isEditing ? 'Modifica la información de tu perfil' : 'Detalles de tu cuenta'}
+                </p>
+              </div>
+            </div>
           </div>
           
-          <div className="p-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="p-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {/* Nombre Completo */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-bold text-gray-700 mb-3">
                   Nombre Completo *
                 </label>
                 {isEditing ? (
                   <div className="relative">
-                    <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                    <User className="absolute left-4 top-1/2 transform -translate-y-1/2 text-purple-400 w-6 h-6" />
                     <input
                       type="text"
                       value={editForm.nombre}
                       onChange={(e) => handleInputChange('nombre', e.target.value)}
-                      className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                      className="w-full pl-12 pr-4 py-4 border-2 border-purple-200 rounded-2xl focus:ring-4 focus:ring-purple-500/20 focus:border-purple-500 transition-all duration-300 text-gray-800 font-medium bg-white/70 backdrop-blur-sm"
                       placeholder="Ingresa tu nombre completo"
                       disabled={isLoading}
                     />
                   </div>
                 ) : (
-                  <div className="flex items-center gap-2 p-3 bg-gray-50 rounded-lg">
-                    <User className="w-5 h-5 text-gray-400" />
-                    <span className="text-gray-900">{userData.nombre}</span>
+                  <div className="flex items-center gap-3 p-4 bg-gradient-to-r from-purple-50 to-pink-50 rounded-2xl border border-purple-200/50">
+                    <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-pink-500 rounded-lg flex items-center justify-center">
+                      <User className="w-5 h-5 text-white" />
+                    </div>
+                    <span className="text-gray-900 font-semibold">{userData.nombre}</span>
                   </div>
                 )}
               </div>
 
               {/* Email */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-bold text-gray-700 mb-3">
                   Correo Electrónico *
                 </label>
                 {isEditing ? (
                   <div className="relative">
-                    <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                    <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 text-blue-400 w-6 h-6" />
                     <input
                       type="email"
                       value={editForm.email}
                       onChange={(e) => handleInputChange('email', e.target.value)}
-                      className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                      className="w-full pl-12 pr-4 py-4 border-2 border-blue-200 rounded-2xl focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-300 text-gray-800 font-medium bg-white/70 backdrop-blur-sm"
                       placeholder="correo@ejemplo.com"
                       disabled={isLoading}
                     />

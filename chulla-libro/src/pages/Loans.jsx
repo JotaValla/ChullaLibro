@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Search, BookOpen, Filter, X, AlertCircle, Book, User, Calendar, Clock, ChevronDown, ChevronUp, CheckCircle, XCircle, RotateCcw, Eye } from 'lucide-react';
+import { Search, BookOpen, Filter, X, AlertCircle, Book, User, Calendar, Clock, ChevronDown, ChevronUp, CheckCircle, XCircle, RotateCcw, Eye, TrendingUp, Award, Target } from 'lucide-react';
 
 // Mock data - replace with actual API calls
 const mockLoans = [
@@ -210,35 +210,57 @@ const Loans = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen py-8 relative overflow-hidden">
+      {/* Fondo decorativo */}
+      <div className="absolute inset-0 bg-gradient-to-br from-indigo-50 via-white to-purple-50"></div>
+      <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-yellow-400/10 to-orange-600/10 rounded-full blur-3xl transform translate-x-32 -translate-y-32"></div>
+      <div className="absolute bottom-0 left-0 w-80 h-80 bg-gradient-to-tr from-purple-400/10 to-pink-600/10 rounded-full blur-3xl transform -translate-x-20 translate-y-20"></div>
+      
+      <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header with breadcrumb */}
         <div className="mb-8">
-          
-          <div className="bg-white rounded-lg shadow-sm border p-6">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center">
-                <BookOpen className="w-6 h-6 text-white" />
+          <div className="bg-white/80 backdrop-blur-sm rounded-3xl shadow-xl border border-white/50 p-8 hover-lift">
+            <div className="flex items-center gap-4 mb-6">
+              <div className="w-16 h-16 bg-gradient-to-br from-purple-500 via-indigo-500 to-blue-500 rounded-2xl flex items-center justify-center shadow-lg animate-pulse-color">
+                <BookOpen className="w-8 h-8 text-white" />
               </div>
               <div>
-                <h1 className="text-3xl font-bold text-gray-900">Mis Préstamos</h1>
-                <p className="text-gray-600">Consulta y gestiona todos tus préstamos de libros</p>
+                <h1 className="text-4xl font-bold bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600 bg-clip-text text-transparent">
+                  Mis Préstamos
+                </h1>
+                <p className="text-lg text-gray-600 font-medium">Consulta y gestiona todos tus préstamos de libros</p>
+                
+                {/* Stats badges */}
+                <div className="flex gap-2 mt-3">
+                  <div className="flex items-center gap-1 px-3 py-1 bg-gradient-to-r from-green-100 to-emerald-100 rounded-full text-xs font-semibold text-green-700">
+                    <TrendingUp className="w-3 h-3" />
+                    4 Activos
+                  </div>
+                  <div className="flex items-center gap-1 px-3 py-1 bg-gradient-to-r from-blue-100 to-indigo-100 rounded-full text-xs font-semibold text-blue-700">
+                    <Award className="w-3 h-3" />
+                    2 Completados
+                  </div>
+                  <div className="flex items-center gap-1 px-3 py-1 bg-gradient-to-r from-orange-100 to-red-100 rounded-full text-xs font-semibold text-orange-700">
+                    <Target className="w-3 h-3" />
+                    1 Vencido
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
 
         {/* Search Section */}
-        <div className="bg-white rounded-lg shadow-sm border p-6 mb-6">
-          <div className="space-y-4">
+        <div className="bg-white/80 backdrop-blur-sm rounded-3xl shadow-xl border border-white/50 p-8 mb-8 hover-lift">
+          <div className="space-y-6">
             {/* Simple Search */}
-            <div className="flex flex-col sm:flex-row gap-3">
+            <div className="flex flex-col sm:flex-row gap-4">
               <div className="flex-1 relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-purple-400 w-6 h-6" />
                 <input
                   type="text"
                   placeholder="Buscar en mis préstamos..."
-                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                  className="w-full pl-12 pr-12 py-4 border-2 border-purple-200 rounded-2xl focus:ring-4 focus:ring-purple-500/20 focus:border-purple-500 transition-all duration-300 text-gray-800 font-medium bg-white/50 backdrop-blur-sm"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   onKeyPress={handleKeyPress}
@@ -247,7 +269,7 @@ const Loans = () => {
                 {searchTerm && (
                   <button
                     onClick={clearSearch}
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                    className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-red-500 transition-colors duration-200"
                     title="Limpiar búsqueda"
                   >
                     <X className="w-5 h-5" />
