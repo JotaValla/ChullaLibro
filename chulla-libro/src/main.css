@@ -1,24 +1,24 @@
 @import "tailwindcss";
 
-/* Variables de colores personalizados */
+/* Variables de colores personalizados - Tonos más suaves y elegantes */
 :root {
-  --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-  --success-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-  --warning-gradient: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
-  --purple-gradient: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
-  --orange-gradient: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
-  --green-gradient: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
-  --pink-gradient: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+  --primary-gradient: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  --secondary-gradient: linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%);
+  --success-gradient: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  --warning-gradient: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  --purple-gradient: linear-gradient(135deg, #a855f7 0%, #7c3aed 100%);
+  --emerald-gradient: linear-gradient(135deg, #10b981 0%, #047857 100%);
+  --slate-gradient: linear-gradient(135deg, #64748b 0%, #475569 100%);
   
-  /* Sombras personalizadas */
-  --shadow-colorful: 0 10px 25px -5px rgba(102, 126, 234, 0.25);
-  --shadow-pink: 0 10px 25px -5px rgba(245, 87, 108, 0.25);
-  --shadow-cyan: 0 10px 25px -5px rgba(79, 172, 254, 0.25);
-  --shadow-purple: 0 10px 25px -5px rgba(118, 75, 162, 0.25);
+  /* Sombras personalizadas más suaves */
+  --shadow-soft: 0 4px 12px -2px rgba(0, 0, 0, 0.08);
+  --shadow-colorful: 0 8px 20px -4px rgba(99, 102, 241, 0.15);
+  --shadow-emerald: 0 8px 20px -4px rgba(16, 185, 129, 0.15);
+  --shadow-amber: 0 8px 20px -4px rgba(245, 158, 11, 0.15);
+  --shadow-violet: 0 8px 20px -4px rgba(139, 92, 246, 0.15);
 }
 
-/* Clases utilitarias personalizadas */
+/* Clases utilitarias personalizadas con colores suaves */
 .bg-primary-gradient {
   background: var(--primary-gradient);
 }
@@ -39,27 +39,132 @@
   background: var(--purple-gradient);
 }
 
-.bg-orange-gradient {
-  background: var(--orange-gradient);
+.bg-emerald-gradient {
+  background: var(--emerald-gradient);
+}
+
+.bg-slate-gradient {
+  background: var(--slate-gradient);
+}
+
+.shadow-soft {
+  box-shadow: var(--shadow-soft);
 }
 
 .shadow-colorful {
   box-shadow: var(--shadow-colorful);
 }
 
-.shadow-pink {
-  box-shadow: var(--shadow-pink);
+.shadow-emerald {
+  box-shadow: var(--shadow-emerald);
 }
 
-.shadow-cyan {
-  box-shadow: var(--shadow-cyan);
+.shadow-amber {
+  box-shadow: var(--shadow-amber);
 }
 
-.shadow-purple {
-  box-shadow: var(--shadow-purple);
+.shadow-violet {
+  box-shadow: var(--shadow-violet);
 }
 
-/* Animaciones personalizadas */
+/* Animaciones personalizadas para los libros */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInFromTop {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse-color {
+  0%, 100% {
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  }
+  50% {
+    background: linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%);
+  }
+}
+
+@keyframes filter-appear {
+  from {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes tag-bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-2px);
+  }
+}
+
+/* Clases utilitarias para animaciones */
+.animate-fade-in-up {
+  animation: fadeInUp 0.5s ease-out;
+}
+
+.animate-slide-in-from-top {
+  animation: slideInFromTop 0.3s ease-out;
+}
+
+.animate-pulse-color {
+  animation: pulse-color 3s ease-in-out infinite;
+}
+
+.animate-filter-appear {
+  animation: filter-appear 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.animate-tag-bounce {
+  animation: tag-bounce 1s ease-in-out infinite;
+}
+
+/* Mejoras para la búsqueda y filtros */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Resaltado de términos de búsqueda */
+mark {
+  background-color: #fef3c7;
+  color: #92400e;
+  padding: 0.125rem 0.25rem;
+  border-radius: 0.25rem;
+  font-weight: 600;
+}
 @keyframes float {
   0%, 100% { transform: translateY(0px); }
   50% { transform: translateY(-10px); }
