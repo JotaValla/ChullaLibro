@@ -244,6 +244,34 @@ const Books = () => {
     setSortOrder('desc');
   };
 
+  // NUEVAS FUNCIONES: Manejo de filtros en cascada
+  const handleCategoryFilter = (category) => {
+    setFilterCategory(category);
+    // Resetear filtros dependientes cuando cambia la categoría
+    if (category !== filterCategory) {
+      setFilterAuthor(''); // Limpiar autor porque las opciones cambiarán
+      setFilterYear(''); // Limpiar año porque las opciones cambiarán
+    }
+  };
+
+  const handleAuthorFilter = (author) => {
+    setFilterAuthor(author);
+    // Resetear filtros dependientes cuando cambia el autor
+    if (author !== filterAuthor) {
+      setFilterYear(''); // Limpiar año porque las opciones cambiarán
+    }
+  };
+
+  const handleYearFilter = (year) => {
+    setFilterYear(year);
+    // El año es el último filtro, no necesita resetear otros
+  };
+
+  const handleAvailabilityFilter = (availability) => {
+    setFilterAvailability(availability);
+    // La disponibilidad no afecta otros filtros en cascada
+  };
+
   const handleKeyPress = (e) => {
     if (e.key === 'Enter') {
       handleSearch();
@@ -256,7 +284,7 @@ const Books = () => {
     }
   };
 
-  // LÓGICA MEJORADA para filtros post-búsqueda con contadores
+  // LÓGICA MEJORADA para filtros post-búsqueda con contadores y FILTROS CASCADA
   const availableCategories = useMemo(() => {
     const categoryCount = {};
     books.forEach(book => {
@@ -269,21 +297,41 @@ const Books = () => {
       .sort((a, b) => b.count - a.count); // Ordenar por cantidad descendente
   }, [books]);
 
+  // NUEVO: Autores disponibles basados en filtros activos
   const availableAuthors = useMemo(() => {
+    // Filtrar libros primero por categoría si está seleccionada
+    let filteredBooks = books;
+    
+    if (filterCategory) {
+      filteredBooks = filteredBooks.filter(book => book.categoria === filterCategory);
+    }
+    
     const authorCount = {};
-    books.forEach(book => {
+    filteredBooks.forEach(book => {
       const author = book.autor || 'Autor desconocido';
       authorCount[author] = (authorCount[author] || 0) + 1;
     });
     
     return Object.entries(authorCount)
       .map(([author, count]) => ({ author, count }))
-      .sort((a, b) => b.count - a.count); // Ordenar por cantidad descendente
-  }, [books]);
+      .sort((a, b) => b.count - a.count);
+  }, [books, filterCategory]);
 
+  // NUEVO: Años disponibles basados en filtros activos
   const availableYears = useMemo(() => {
+    // Filtrar libros por filtros activos
+    let filteredBooks = books;
+    
+    if (filterCategory) {
+      filteredBooks = filteredBooks.filter(book => book.categoria === filterCategory);
+    }
+    
+    if (filterAuthor) {
+      filteredBooks = filteredBooks.filter(book => book.autor === filterAuthor);
+    }
+    
     const yearCount = {};
-    books.forEach(book => {
+    filteredBooks.forEach(book => {
       const year = book.anio_publicacion || book.año_publicacion || 'Año desconocido';
       yearCount[year] = (yearCount[year] || 0) + 1;
     });
@@ -293,9 +341,40 @@ const Books = () => {
       .sort((a, b) => {
         if (a.year === 'Año desconocido') return 1;
         if (b.year === 'Año desconocido') return -1;
-        return b.year - a.year; // Años más recientes primero
+        return b.year - a.year;
       });
-  }, [books]);
+  }, [books, filterCategory, filterAuthor]);
+
+  // NUEVO: Estados de disponibilidad basados en filtros activos
+  const availableAvailabilityStats = useMemo(() => {
+    // Filtrar libros por filtros activos
+    let filteredBooks = books;
+    
+    if (filterCategory) {
+      filteredBooks = filteredBooks.filter(book => book.categoria === filterCategory);
+    }
+    
+    if (filterAuthor) {
+      filteredBooks = filteredBooks.filter(book => book.autor === filterAuthor);
+    }
+    
+    if (filterYear) {
+      filteredBooks = filteredBooks.filter(book => 
+        (book.anio_publicacion || book.año_publicacion) == filterYear
+      );
+    }
+    
+    const stats = filteredBooks.reduce((acc, book) => {
+      if (book.disponible) {
+        acc.available++;
+      } else {
+        acc.unavailable++;
+      }
+      return acc;
+    }, { available: 0, unavailable: 0 });
+    
+    return stats;
+  }, [books, filterCategory, filterAuthor, filterYear]);
 
   const availabilityStats = useMemo(() => {
     const stats = books.reduce((acc, book) => {
@@ -883,6 +962,20 @@ const Books = () => {
                     </div>
                   </div>
 
+                  {/* Información sobre filtros en cascada */}
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                    <div className="flex items-start gap-2 text-blue-800 text-sm">
+                      <Filter className="w-4 h-4 mt-0.5 flex-shrink-0" />
+                      <div>
+                        <span className="font-medium">Filtros Inteligentes:</span>
+                        <span className="ml-1">
+                          Los filtros se actualizan automáticamente según tu selección. 
+                          Elige una categoría → se actualizan los autores → se actualizan los años.
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
                   {/* Grid de Filtros */}
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                     
@@ -899,7 +992,7 @@ const Books = () => {
                             name="category"
                             value=""
                             checked={filterCategory === ''}
-                            onChange={(e) => setFilterCategory(e.target.value)}
+                            onChange={(e) => handleCategoryFilter(e.target.value)}
                             className="w-4 h-4 text-blue-600 focus:ring-blue-500"
                           />
                           <span className="text-sm">Todas</span>
@@ -914,7 +1007,7 @@ const Books = () => {
                               name="category"
                               value={category}
                               checked={filterCategory === category}
-                              onChange={(e) => setFilterCategory(e.target.value)}
+                              onChange={(e) => handleCategoryFilter(e.target.value)}
                               className="w-4 h-4 text-blue-600 focus:ring-blue-500"
                             />
                             <span className="text-sm truncate">{category || 'Sin categoría'}</span>
@@ -931,6 +1024,11 @@ const Books = () => {
                       <label className="flex text-sm font-semibold text-slate-700 mb-3 items-center gap-2">
                         <User className="w-4 h-4 text-emerald-600" />
                         Autor
+                        {filterCategory && (
+                          <span className="text-xs text-emerald-600 bg-emerald-100 px-2 py-1 rounded-full">
+                            en {filterCategory}
+                          </span>
+                        )}
                       </label>
                       <div className="space-y-2 max-h-32 overflow-y-auto">
                         <label className="flex items-center gap-3 p-2 hover:bg-slate-50 rounded-lg cursor-pointer transition-colors">
@@ -939,12 +1037,12 @@ const Books = () => {
                             name="author"
                             value=""
                             checked={filterAuthor === ''}
-                            onChange={(e) => setFilterAuthor(e.target.value)}
+                            onChange={(e) => handleAuthorFilter(e.target.value)}
                             className="w-4 h-4 text-emerald-600 focus:ring-emerald-500"
                           />
                           <span className="text-sm">Todos</span>
                           <span className="ml-auto text-xs bg-slate-100 text-slate-600 px-2 py-1 rounded-full">
-                            {books.length}
+                            {availableAuthors.reduce((sum, author) => sum + author.count, 0)}
                           </span>
                         </label>
                         {availableAuthors.slice(0, 5).map(({ author, count }) => (
@@ -954,7 +1052,7 @@ const Books = () => {
                               name="author"
                               value={author}
                               checked={filterAuthor === author}
-                              onChange={(e) => setFilterAuthor(e.target.value)}
+                              onChange={(e) => handleAuthorFilter(e.target.value)}
                               className="w-4 h-4 text-emerald-600 focus:ring-emerald-500"
                             />
                             <span className="text-sm truncate">{author}</span>
@@ -971,6 +1069,16 @@ const Books = () => {
                       <label className="flex text-sm font-semibold text-slate-700 mb-3 items-center gap-2">
                         <Calendar className="w-4 h-4 text-amber-600" />
                         Año
+                        {(filterCategory || filterAuthor) && (
+                          <span className="text-xs text-amber-600 bg-amber-100 px-2 py-1 rounded-full">
+                            {filterCategory && filterAuthor 
+                              ? `${filterAuthor} en ${filterCategory}`
+                              : filterCategory 
+                                ? `en ${filterCategory}`
+                                : `de ${filterAuthor}`
+                            }
+                          </span>
+                        )}
                       </label>
                       <div className="space-y-2 max-h-32 overflow-y-auto">
                         <label className="flex items-center gap-3 p-2 hover:bg-slate-50 rounded-lg cursor-pointer transition-colors">
@@ -979,12 +1087,12 @@ const Books = () => {
                             name="year"
                             value=""
                             checked={filterYear === ''}
-                            onChange={(e) => setFilterYear(e.target.value)}
+                            onChange={(e) => handleYearFilter(e.target.value)}
                             className="w-4 h-4 text-amber-600 focus:ring-amber-500"
                           />
                           <span className="text-sm">Todos</span>
                           <span className="ml-auto text-xs bg-slate-100 text-slate-600 px-2 py-1 rounded-full">
-                            {books.length}
+                            {availableYears.reduce((sum, year) => sum + year.count, 0)}
                           </span>
                         </label>
                         {availableYears.slice(0, 5).map(({ year, count }) => (
@@ -994,7 +1102,7 @@ const Books = () => {
                               name="year"
                               value={year}
                               checked={filterYear === year}
-                              onChange={(e) => setFilterYear(e.target.value)}
+                              onChange={(e) => handleYearFilter(e.target.value)}
                               className="w-4 h-4 text-amber-600 focus:ring-amber-500"
                             />
                             <span className="text-sm">{year}</span>
@@ -1011,6 +1119,11 @@ const Books = () => {
                       <label className="flex text-sm font-semibold text-slate-700 mb-3 items-center gap-2">
                         <BookOpen className="w-4 h-4 text-violet-600" />
                         Disponibilidad
+                        {(filterCategory || filterAuthor || filterYear) && (
+                          <span className="text-xs text-violet-600 bg-violet-100 px-2 py-1 rounded-full">
+                            filtrado
+                          </span>
+                        )}
                       </label>
                       <div className="space-y-2">
                         <label className="flex items-center gap-3 p-2 hover:bg-slate-50 rounded-lg cursor-pointer transition-colors">
@@ -1019,12 +1132,12 @@ const Books = () => {
                             name="availability"
                             value=""
                             checked={filterAvailability === ''}
-                            onChange={(e) => setFilterAvailability(e.target.value)}
+                            onChange={(e) => handleAvailabilityFilter(e.target.value)}
                             className="w-4 h-4 text-violet-600 focus:ring-violet-500"
                           />
                           <span className="text-sm">Todos</span>
                           <span className="ml-auto text-xs bg-slate-100 text-slate-600 px-2 py-1 rounded-full">
-                            {books.length}
+                            {availableAvailabilityStats.available + availableAvailabilityStats.unavailable}
                           </span>
                         </label>
                         <label className="flex items-center gap-3 p-2 hover:bg-slate-50 rounded-lg cursor-pointer transition-colors">
@@ -1033,7 +1146,7 @@ const Books = () => {
                             name="availability"
                             value="available"
                             checked={filterAvailability === 'available'}
-                            onChange={(e) => setFilterAvailability(e.target.value)}
+                            onChange={(e) => handleAvailabilityFilter(e.target.value)}
                             className="w-4 h-4 text-violet-600 focus:ring-violet-500"
                           />
                           <span className="text-sm flex items-center gap-2">
@@ -1041,7 +1154,7 @@ const Books = () => {
                             Disponibles
                           </span>
                           <span className="ml-auto text-xs bg-emerald-100 text-emerald-700 px-2 py-1 rounded-full">
-                            {availabilityStats.available}
+                            {availableAvailabilityStats.available}
                           </span>
                         </label>
                         <label className="flex items-center gap-3 p-2 hover:bg-slate-50 rounded-lg cursor-pointer transition-colors">
@@ -1050,7 +1163,7 @@ const Books = () => {
                             name="availability"
                             value="unavailable"
                             checked={filterAvailability === 'unavailable'}
-                            onChange={(e) => setFilterAvailability(e.target.value)}
+                            onChange={(e) => handleAvailabilityFilter(e.target.value)}
                             className="w-4 h-4 text-violet-600 focus:ring-violet-500"
                           />
                           <span className="text-sm flex items-center gap-2">
@@ -1058,7 +1171,7 @@ const Books = () => {
                             No Disponibles
                           </span>
                           <span className="ml-auto text-xs bg-red-100 text-red-700 px-2 py-1 rounded-full">
-                            {availabilityStats.unavailable}
+                            {availableAvailabilityStats.unavailable}
                           </span>
                         </label>
                       </div>
