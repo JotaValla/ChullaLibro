@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react'; // Agregando useEffect y useRef
-import { Search, BookOpen, Filter, X, AlertCircle, Book, User, Tag, Eye, ChevronDown, ChevronUp, SlidersHorizontal, ListFilter, Clock, CheckCircle, Loader2, RefreshCw, Hash, Calendar, ArrowUpDown } from 'lucide-react'; // Iconos mejorados
+import { Search, BookOpen, Filter, X, AlertCircle, Book, User, Tag, Eye, ChevronDown, ChevronUp, SlidersHorizontal, ListFilter, Clock, CheckCircle, Loader2, RefreshCw, Hash, Calendar, ArrowUpDown, ChevronLeft, ChevronRight } from 'lucide-react'; // Iconos mejorados
 import { buscarLibrosConAND, buscarLibrosPorTitulo, buscarTodosLosLibros, buscarLibrosConOR } from '../backend/libros';
 
 const Books = () => {
@@ -25,6 +25,10 @@ const Books = () => {
   const [filterYear, setFilterYear] = useState(''); // Filtro por año de publicación
   const [sortBy, setSortBy] = useState('relevancia'); // Ordenamiento: relevancia, titulo, autor, año
   const [sortOrder, setSortOrder] = useState('desc'); // asc o desc
+
+  // NUEVOS ESTADOS PARA PAGINACIÓN
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(12); // 12 libros por página por defecto
 
   // NUEVOS ESTADOS PARA MEJORAR UX
   const [searchHistory, setSearchHistory] = useState([]); // Historial de búsquedas
@@ -130,6 +134,9 @@ const Books = () => {
     setHighlightTerms(terms);
     setLastSearchTerm(searchTerm);
     
+    // Resetear paginación
+    setCurrentPage(1);
+    
     await performIntelligentSearch(searchTerm);
   };
 
@@ -145,6 +152,9 @@ const Books = () => {
       .filter(t => t.length > 1);
     setHighlightTerms(terms);
     
+    // Resetear paginación
+    setCurrentPage(1);
+    
     // Usar el operador seleccionado
     const searchFn = advancedSearchOperator === 'AND'
       ? () => buscarLibrosConAND(advancedFilters)
@@ -155,6 +165,10 @@ const Books = () => {
   const loadAllBooks = async () => {
     setHighlightTerms([]);
     setLastSearchTerm('Todos los libros');
+    
+    // Resetear paginación
+    setCurrentPage(1);
+    
     await performSearch(async () => buscarTodosLosLibros());
   };
 
@@ -217,6 +231,7 @@ const Books = () => {
     setFilterYear('');
     setSortBy('relevancia');
     setSortOrder('desc');
+    setCurrentPage(1);
     setHighlightTerms([]);
     setLastSearchTerm('');
     setSearchDuration(null);
@@ -242,11 +257,13 @@ const Books = () => {
     setFilterYear('');
     setSortBy('relevancia');
     setSortOrder('desc');
+    setCurrentPage(1); // Resetear a la primera página
   };
 
   // NUEVAS FUNCIONES: Manejo de filtros en cascada
   const handleCategoryFilter = (category) => {
     setFilterCategory(category);
+    setCurrentPage(1); // Resetear a la primera página
     // Resetear filtros dependientes cuando cambia la categoría
     if (category !== filterCategory) {
       setFilterAuthor(''); // Limpiar autor porque las opciones cambiarán
@@ -256,6 +273,7 @@ const Books = () => {
 
   const handleAuthorFilter = (author) => {
     setFilterAuthor(author);
+    setCurrentPage(1); // Resetear a la primera página
     // Resetear filtros dependientes cuando cambia el autor
     if (author !== filterAuthor) {
       setFilterYear(''); // Limpiar año porque las opciones cambiarán
@@ -264,11 +282,13 @@ const Books = () => {
 
   const handleYearFilter = (year) => {
     setFilterYear(year);
+    setCurrentPage(1); // Resetear a la primera página
     // El año es el último filtro, no necesita resetear otros
   };
 
   const handleAvailabilityFilter = (availability) => {
     setFilterAvailability(availability);
+    setCurrentPage(1); // Resetear a la primera página
     // La disponibilidad no afecta otros filtros en cascada
   };
 
@@ -433,6 +453,65 @@ const Books = () => {
 
     return filtered;
   }, [books, filterCategory, filterAvailability, filterAuthor, filterYear, sortBy, sortOrder]);
+
+  // LÓGICA DE PAGINACIÓN
+  const totalPages = Math.ceil(filteredBooks.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentBooks = filteredBooks.slice(startIndex, endIndex);
+
+  // Funciones de paginación
+  const goToPage = (page) => {
+    setCurrentPage(page);
+    // Scroll hacia arriba para ver los nuevos resultados
+    if (resultsRef.current) {
+      resultsRef.current.scrollIntoView({ 
+        behavior: 'smooth', 
+        block: 'start' 
+      });
+    }
+  };
+
+  const goToNextPage = () => {
+    if (currentPage < totalPages) {
+      goToPage(currentPage + 1);
+    }
+  };
+
+  const goToPreviousPage = () => {
+    if (currentPage > 1) {
+      goToPage(currentPage - 1);
+    }
+  };
+
+  // Generar números de página para mostrar
+  const getPageNumbers = () => {
+    const delta = 2; // Páginas a mostrar a cada lado de la página actual
+    const range = [];
+    const rangeWithDots = [];
+
+    for (let i = Math.max(2, currentPage - delta); i <= Math.min(totalPages - 1, currentPage + delta); i++) {
+      range.push(i);
+    }
+
+    if (currentPage - delta > 2) {
+      rangeWithDots.push(1, '...');
+    } else {
+      rangeWithDots.push(1);
+    }
+
+    rangeWithDots.push(...range);
+
+    if (currentPage + delta < totalPages - 1) {
+      rangeWithDots.push('...', totalPages);
+    } else {
+      if (totalPages > 1) {
+        rangeWithDots.push(totalPages);
+      }
+    }
+
+    return rangeWithDots;
+  };
 
   // NUEVA FUNCIÓN: Obtener sugerencias de búsqueda
   const getSuggestions = () => {
@@ -1265,7 +1344,7 @@ const Books = () => {
 
                   {/* Grid de Libros Mejorado */}
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {filteredBooks.map((book, index) => (
+                    {currentBooks.map((book, index) => (
                       <div 
                         key={book.id} 
                         className="group bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 hover:border-purple-200 transform hover:-translate-y-1"
@@ -1367,6 +1446,85 @@ const Books = () => {
                       </div>
                     ))}
                   </div>
+
+                  {/* Paginación */}
+                  {totalPages > 1 && (
+                    <div className="mt-8 flex flex-col sm:flex-row justify-between items-center gap-4">
+                      {/* Información de paginación */}
+                      <div className="text-sm text-slate-600">
+                        Mostrando <span className="font-medium">{startIndex + 1}</span> a{' '}
+                        <span className="font-medium">{Math.min(endIndex, filteredBooks.length)}</span> de{' '}
+                        <span className="font-medium">{filteredBooks.length}</span> libros
+                      </div>
+
+                      {/* Control de elementos por página */}
+                      <div className="flex items-center gap-2 text-sm">
+                        <label htmlFor="itemsPerPage" className="text-slate-600">
+                          Mostrar:
+                        </label>
+                        <select
+                          id="itemsPerPage"
+                          value={itemsPerPage}
+                          onChange={(e) => {
+                            setItemsPerPage(Number(e.target.value));
+                            setCurrentPage(1);
+                          }}
+                          className="px-2 py-1 border border-slate-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        >
+                          <option value={6}>6</option>
+                          <option value={12}>12</option>
+                          <option value={24}>24</option>
+                          <option value={48}>48</option>
+                        </select>
+                        <span className="text-slate-600">por página</span>
+                      </div>
+
+                      {/* Controles de paginación */}
+                      <div className="flex items-center gap-2">
+                        {/* Botón anterior */}
+                        <button
+                          onClick={goToPreviousPage}
+                          disabled={currentPage === 1}
+                          className="flex items-center gap-1 px-3 py-2 text-sm font-medium text-slate-700 bg-white border border-slate-300 rounded-lg hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                        >
+                          <ChevronLeft className="w-4 h-4" />
+                          Anterior
+                        </button>
+
+                        {/* Números de página */}
+                        <div className="flex items-center gap-1">
+                          {getPageNumbers().map((pageNumber, index) => (
+                            <div key={index}>
+                              {pageNumber === '...' ? (
+                                <span className="px-3 py-2 text-slate-500">...</span>
+                              ) : (
+                                <button
+                                  onClick={() => goToPage(pageNumber)}
+                                  className={`px-3 py-2 text-sm font-medium rounded-lg transition-colors ${
+                                    currentPage === pageNumber
+                                      ? 'bg-blue-600 text-white'
+                                      : 'text-slate-700 bg-white border border-slate-300 hover:bg-slate-50'
+                                  }`}
+                                >
+                                  {pageNumber}
+                                </button>
+                              )}
+                            </div>
+                          ))}
+                        </div>
+
+                        {/* Botón siguiente */}
+                        <button
+                          onClick={goToNextPage}
+                          disabled={currentPage === totalPages}
+                          className="flex items-center gap-1 px-3 py-2 text-sm font-medium text-slate-700 bg-white border border-slate-300 rounded-lg hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                        >
+                          Siguiente
+                          <ChevronRight className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </div>
+                  )}
                 </div>
               ) : (
                 <div className="text-center py-16">
